@@ -1,8 +1,11 @@
 package com.company.Tree;
 
-public class TreeNode<T extends Comparable<T>> {
+import com.company.employee.Employee;
+
+public class TreeNode<T extends Comparable<T>> { // https://github.com/dashsaurabh/data-structures/tree/master/src/tree
     // Instance variables
     private T data;
+    private String key;
     private TreeNode leftChild;
     private TreeNode rightChild;
     private boolean isDeleted;
@@ -13,6 +16,11 @@ public class TreeNode<T extends Comparable<T>> {
     // constructor overload
     public TreeNode(T data){
         this.data = data;
+    }
+
+    public TreeNode(T data, String key){
+        this.data = data;
+        this.key = key;
     }
 
     // find data
@@ -27,9 +35,38 @@ public class TreeNode<T extends Comparable<T>> {
         return null;
     }
 
+    // find key
+    public TreeNode find(String key){
+        if (this.key == key && !isDeleted)
+            return this;
+        if (key.equals(this.key) && leftChild != null){
+            return leftChild.find(key);
+        }
+        if (rightChild != null)
+            return rightChild.find(key);
+        return null;
+    }
+
     // insert data
     public void insert(T data){
         if (data.compareTo(this.data) < 0){
+            if (this.rightChild == null) {
+                this.rightChild = new TreeNode(data);
+            }else{
+                this.rightChild.insert(data);
+            }
+        }else{
+            if (this.leftChild == null) {
+                this.leftChild = new TreeNode(data);
+            }else{
+                this.leftChild.insert(data);
+            }
+        }
+    }
+
+    // insert data overload
+    public void insert(T data, String key){
+        if (data.compareTo(this.data) < 0 || key.compareTo(this.key) < 0){
             if (this.rightChild == null) {
                 this.rightChild = new TreeNode(data);
             }else{
@@ -58,14 +95,14 @@ public class TreeNode<T extends Comparable<T>> {
         return (T) this.rightChild.largest();
     }
 
+    // get key
+    public String getKey(){
+        return key;
+    }
+
     // delete node
     public void delete(){
         this.isDeleted = true;
-    }
-
-    // get isDeleted
-    public boolean getIsDeleted(){
-        return isDeleted;
     }
 
     // return data
@@ -91,5 +128,10 @@ public class TreeNode<T extends Comparable<T>> {
     // set rightChild data
     public void setRightChild(TreeNode rightChild) {
         this.rightChild = rightChild;
+    }
+
+    // Override toString
+    public String toString(){
+        return "Data {" + getData() + "}";
     }
 }

@@ -1,6 +1,6 @@
 package com.company.Tree;
 
-public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
+public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> { // https://github.com/jnethery/CS2/blob/master/Generic%20Binary%20Search%20Tree/GenericBST.java
     // Instance variables
     private TreeNode root;
 
@@ -78,24 +78,151 @@ public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
         if (root == null){
             root = new TreeNode(data);
         }else{
-            root.insert(data);
+            this.root = insert(this.root, data);
+        }
+
+    }
+
+    // overload
+    public void insert(T data, String key){
+        if (root == null){
+            root = new TreeNode(data, key);
+        }else{
+            root = insert(this.root, data, key);
         }
     }
 
-    @Override
-    public TreeNode find(T data) {
-        if (root != null)
-            return root.find(data);
-        return null;
+    // override
+    private TreeNode insert(TreeNode root, T data){
+        // If root null add data
+        if (root == null){
+            return new TreeNode(data);
+        }
+
+        // If data searched  < current root node then traverse to left child
+        else if (root.getData().compareTo(data) < 0){
+            root.setLeftChild(insert(root.getLeftChild(), data));
+        }
+
+        // If data searched  < current root node then traverse to left child
+        else if (root.getData().compareTo(data) > 0){
+            root.setRightChild(insert(root.getRightChild(), data));
+        }
+
+        else{
+            System.out.println("Duplicates not allowed");
+        }
+
+        return root;
     }
 
-    @Override
+    // override
+    private TreeNode insert(TreeNode root, T data, String key){
+        // If root null add data
+        if (root == null){
+            return new TreeNode(data, key);
+        }
+
+        // If data searched  < current root node then traverse to left child
+        else if (key.compareTo(root.getKey()) < 0){
+            root.setLeftChild(insert(root.getLeftChild(), data, key));
+        }
+
+        // If data searched  < current root node then traverse to left child
+        else if (key.compareTo(root.getKey()) > 0){
+            root.setRightChild(insert(root.getRightChild(), data, key));
+        }
+
+        else{
+            System.out.println("Duplicates not allowed");
+        }
+
+        return root;
+    }
+
+    // isEmpty
+    public boolean isEmpty(){
+        if(root == null)
+            return true;
+        return false;
+    }
+
+    @Override // find data
+    public TreeNode find(T data) {
+        if (root != null)
+            return find(root, data);
+        else
+        return null;
+//        return find(root, data)
+    }
+
+    //Overload find recursive helper
+    private TreeNode find(TreeNode root, T data){
+        // If root null add data
+        if (root == null){
+            return null;
+        }
+
+        // If data searched  < current root node then traverse to left child
+        else if (data.compareTo((T) root.getData()) < 0){
+            return find(root.getLeftChild(), data);
+        }
+
+        // If data searched  < current root node then traverse to left child
+        else if (data.compareTo((T) root.getData()) > 0){
+            return find(root.getRightChild(), data);
+        }
+        return root;
+    }
+
+   // find key - overload
+    public TreeNode find(String key) {
+        if (root != null)
+            return find(root, key);
+        else
+            return null;
+    }
+
+    //Overload find recursive helper
+    private TreeNode find(TreeNode root, String key){
+        // If root null add data
+        if (root == null){
+            return null;
+        }
+
+        // If data searched  < current root node then traverse to left child
+        else if (key.compareTo(root.getKey()) < 0){
+            return find(root.getLeftChild(), key);
+        }
+
+        // If data searched  < current root node then traverse to left child
+        else if (key.compareTo(root.getKey()) > 0){
+            return find(root.getRightChild(), key);
+        }
+        return root;
+    }
+
+    // return node data
+    public T getTreeNodeData(){
+        return (T) root.getData();
+    }
+
+    @Override // delete node from tree
     public void delete(T data){
         TreeNode toDel = find(data);
         toDel.delete();
+
+//        if (!find(data))
+//            root.delete();
+    }
+
+    // overload
+    public void delete(String key){
+        TreeNode toDel = find(key);
+        toDel.delete();
     }
     /*
-    Below is code to actually delete the node
+    Below is code to actually delete the node from BST
      */
 //    public void delete(T data) {
 //        TreeNode current = this.root;
@@ -153,4 +280,9 @@ public class BinaryTree<T extends Comparable<T>> implements IBinaryTree<T> {
 //            }
 //        }
 //    }
+
+    // String override
+    public String toString(){
+        return root.getData().toString();
+    }
 }
